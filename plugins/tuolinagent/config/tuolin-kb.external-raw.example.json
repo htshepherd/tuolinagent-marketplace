@@ -1,6 +1,6 @@
 {
   "raw_dir": "D:/Tuolin/raw",
-  "output_dir": "graphify-out",
-  "packs_dir": "graphify-out/tuolin-agent-packs",
+  "output_dir": "D:/Tuolin/graphify-out",
+  "packs_dir": "D:/Tuolin/graphify-out/tuolin-agent-packs",
   "graphify_mode": "codex_adapter"
 }

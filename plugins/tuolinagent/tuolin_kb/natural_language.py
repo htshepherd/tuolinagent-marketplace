@@ -192,6 +192,85 @@ def load_organize_recommendation_text(root: Path | str = ".", config: ProjectCon
     return format_organize_recommendation(recommendation, report)
 
 
+def load_remaining_partitions_text(root: Path | str = ".", config: ProjectConfig | None = None) -> str:
+    root_path = Path(root).resolve()
+    cfg = config or load_project_config(root_path)
+    if not (root_path / cfg.packs_dir / "manifest.json").exists():
+        return "当前还没有生成知识库状态。你可以先说：整理一下拓霖知识库。"
+
+    report = load_status(root_path, cfg)
+    ready = [item["name"] for item in report.build_partitions if item.get("status") == "ready"]
+    actionable = [
+        item
+        for item in report.build_partitions
+        if item.get("status") in {"needs_update", "pending_extraction", "review_required"}
+    ]
+    missing_products = [
+        item["name"]
+        for item in report.build_partitions
+        if item.get("type") == "product" and item.get("status") == "not_built"
+    ]
+
+    lines = ["有。按当前知识库输出看：", ""]
+    if ready:
+        lines.extend(["已可用：", f"- {'、'.join(ready)}", ""])
+    if actionable:
+        lines.append("还需要继续处理：")
+        lines.extend(f"- {item['name']}：{partition_action_summary(item)}" for item in actionable)
+        lines.append("")
+    else:
+        lines.extend(["当前没有已识别但待整理的内容，也没有待看的新素材。", ""])
+    if missing_products:
+        lines.extend(["需要先补齐产品素材，暂时不能直接整理成可用资料：", f"- {'、'.join(missing_products)}", ""])
+
+    recommendation = recommend_organize_next_step(root_path, cfg)
+    if recommendation.action == "continue_review" and recommendation.partition_name:
+        lines.extend(
+            [
+                f"下一步建议：继续看{recommendation.partition_name}资料。",
+                f"你可以直接回复：确认，继续看{recommendation.partition_name}资料。",
+            ]
+        )
+    elif recommendation.action == "organize_usable" and recommendation.partition_name:
+        lines.extend(
+            [
+                f"下一步建议：先把{recommendation.partition_name}整理成可用资料。",
+                f"你可以直接回复：确认，先把{recommendation.partition_name}整理成可用资料。",
+            ]
+        )
+    elif recommendation.action == "update_first" and recommendation.partition_name:
+        lines.extend(
+            [
+                f"下一步建议：先更新{recommendation.partition_name}分区。",
+                f"你可以直接回复：确认，先更新{recommendation.partition_name}分区。",
+            ]
+        )
+    elif recommendation.partition_name:
+        lines.extend(
+            [
+                f"下一步建议：直接使用{recommendation.partition_name}现有资料做问答或内容准备。",
+                f"你可以直接问：{recommendation.partition_name}适合哪些客户场景？",
+            ]
+        )
+    return "\n".join(lines)
+
+
+def partition_action_summary(item: dict) -> str:
+    if item.get("status") == "needs_update":
+        return "raw资料有变化，需要先更新这个分区"
+    pending_results = item.get("pending_result_count", 0)
+    pending_materials = item.get("pending_extraction_count", 0)
+    review_claims = item.get("review_claim_count", 0)
+    parts = []
+    if pending_materials:
+        parts.append(f"{pending_materials}个素材待继续查看")
+    if pending_results:
+        parts.append(f"{pending_results}条已识别内容待整理成可用资料")
+    if review_claims:
+        parts.append(f"{review_claims}条内容待人工确认")
+    return "，".join(parts) if parts else item.get("status_label", "需要继续处理")
+
+
 def recommend_initial_build(root: Path, config: ProjectConfig) -> OrganizeRecommendation:
     products = collect_product_knowledge(root, config)
     ready_products = [item for item in products if item.status == "ready"]

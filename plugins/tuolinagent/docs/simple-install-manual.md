@@ -35,15 +35,21 @@ Codex 列出缺少项后，复制：
 Graphify 先不安装。默认 codex_adapter 模式不需要 Graphify API key。
 ```
 
-## 3. 配置 raw 目录
+## 3. 配置知识库项目目录
 
-把路径换成你的真实 raw 路径：
+把路径换成你的真实路径。`D:\LocalKnowledge` 是唯一知识库项目目录，里面放 `config`、`raw`、`graphify-out`：
 
 ```text
 请在当前项目里创建 config/tuolin-kb.config.json。
-我的 raw 目录是 D:\LocalKnowledge\raw，请在配置里写成 D:/LocalKnowledge/raw。
+我的知识库项目目录是 D:\LocalKnowledge。
+我的 raw 目录是 D:\LocalKnowledge\raw。
+请把配置写成：
+raw_dir: D:/LocalKnowledge/raw
+output_dir: D:/LocalKnowledge/graphify-out
+packs_dir: D:/LocalKnowledge/graphify-out/tuolin-agent-packs
 保持 codex_adapter 模式，不要要求 Graphify API key。
 不要移动、删除或重命名我的 raw 目录。
+不要在插件安装目录、临时目录或其他项目目录里生成新的 graphify-out。
 ```
 
 ## 4. 检查配置

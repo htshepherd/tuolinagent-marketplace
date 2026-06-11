@@ -24,6 +24,7 @@ Natural-language routing:
 - “从头构建拓霖知识库”、“从零构建拓霖知识库”、“重新构建拓霖知识库”、“全量重建拓霖知识库”：先拆成明确的构建分区队列并等待确认；不得直接无边界扫描 raw。
 - “更新一下知识库”：先展示构建分区状态和需要更新的分区；等待用户选择目标分区或确认分区队列。
 - “查看四个产品的知识包状态”、“查看知识库状态”：执行 status，返回构建分区和产品状态。
+- “还有待整理的分区吗”、“查看当前还有哪些分区需要继续整理”：优先使用 `python3 scripts/tuolin_kb/remaining_partitions.py`，按当前 `graphify-out/tuolin-agent-packs/manifest.json` 回答。
 - 产品问答：先读 `graphify-out/tuolin-agent-packs/manifest.json`，再读对应产品知识包。
 - “有哪些内容需要我复核”：读取对应 `evidence_pack`。
 - “继续看资料”、“继续看剩下的资料”、“继续看图片报告和视频”：推荐目标构建分区，说明这一步会继续查看图片、报告或视频画面，并等待确认；确认后只处理该分区任务。
@@ -31,6 +32,20 @@ Natural-language routing:
 - “准备Codex抽取任务”：高级/调试表达，生成 `graphify-out/tuolin-agent-packs/extraction/tasks.json`；普通用户不要使用这个术语。
 
 Build/update before execution must show a short partition-scoped plan and wait for user confirmation.
+
+### Project Directory Rules
+
+The plugin installation directory is not the knowledge-base project directory. Ordinary users should manage one knowledge-base project directory containing:
+
+```text
+config/
+raw/
+graphify-out/
+```
+
+If `raw_dir` is configured as an absolute external path, `output_dir` and `packs_dir` must also be absolute paths under the intended knowledge-base project directory. Do not leave `output_dir` as plain `graphify-out` in this case, because Codex may generate a second output directory under whatever folder is currently open.
+
+When checking configuration, report the resolved raw path, output path, and Agent pack path.
 
 Every user-facing recommendation that needs confirmation must include one copyable natural-language reply. Use wording like:
 
@@ -61,6 +76,20 @@ When there is nothing left to organize, switch to using existing materials and i
 5. 等待用户确认。
 
 Only when the user asks “查看知识库状态” should you show the full seven-partition status list and counts.
+
+### Status Wording Rules
+
+When answering whether partitions still need work, keep these categories separate:
+
+- `ready` -> “已可用”
+- `pending_extraction` -> “还有素材待继续查看”
+- `review_required` -> “有已识别内容待整理或待确认”
+- `needs_update` -> “raw资料有变化，需要先更新”
+- `not_built` product partitions -> “需要先补齐产品素材，暂时不能直接整理成可用资料”
+
+Do not call `not_built` product partitions “待整理”. They are not ready to organize until raw product material exists.
+Do not say “公司、标准、市场暂无资料” if `company/company.json`, `standards/standards.json`, or `market/market.json` exists. Use manifest status and pending counts instead.
+Do not say “还没形成资料沉淀” for a `ready` partition.
 
 Do not ask the user to choose between multiple build types when they say “从头构建”. Treat “从头构建” or “全量重建” as a request to propose a partition queue, then wait for confirmation.
 

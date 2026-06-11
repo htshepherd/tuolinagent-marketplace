@@ -16,6 +16,14 @@ def resolve_raw_dir(root: Path, config: ProjectConfig) -> Path:
     return resolve_project_path(root, config.raw_dir)
 
 
+def resolve_output_dir(root: Path, config: ProjectConfig) -> Path:
+    return resolve_project_path(root, config.output_dir)
+
+
+def resolve_packs_dir(root: Path, config: ProjectConfig) -> Path:
+    return resolve_project_path(root, config.packs_dir)
+
+
 def source_path(root: Path, path: Path) -> str:
     resolved = path.resolve()
     try:

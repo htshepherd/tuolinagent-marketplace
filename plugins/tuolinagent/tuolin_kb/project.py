@@ -8,12 +8,15 @@ from pathlib import Path
 
 from .config import ProjectConfig, load_project_config
 from .document_conversion import resolve_command
-from .paths import resolve_raw_dir
+from .paths import resolve_output_dir, resolve_packs_dir, resolve_raw_dir
 
 
 @dataclass(frozen=True)
 class ProjectReport:
     root: Path
+    raw_path: Path
+    output_path: Path
+    packs_path: Path
     raw_exists: bool
     core_knowledge_exists: bool
     core_knowledge_file_count: int
@@ -33,6 +36,8 @@ def validate_project(root: Path | str = ".", config: ProjectConfig | None = None
     root_path = Path(root).resolve()
     cfg = config or load_project_config(root_path)
     raw_path = resolve_raw_dir(root_path, cfg)
+    output_path = resolve_output_dir(root_path, cfg)
+    packs_path = resolve_packs_dir(root_path, cfg)
     core_path = raw_path / "00_知识库核心资料"
     core_files = [
         path
@@ -45,6 +50,10 @@ def validate_project(root: Path | str = ".", config: ProjectConfig | None = None
         warnings.append("缺少 raw/ 目录。")
     if not core_path.exists():
         warnings.append("缺少 raw/00_知识库核心资料/ 目录。")
+    if Path(cfg.raw_dir).is_absolute() and not Path(cfg.output_dir).is_absolute():
+        warnings.append("raw_dir 是绝对路径，但 output_dir 是相对路径；建议改成绝对路径，避免在不同项目目录生成多个 graphify-out。")
+    if Path(cfg.raw_dir).is_absolute() and not Path(cfg.packs_dir).is_absolute():
+        warnings.append("raw_dir 是绝对路径，但 packs_dir 是相对路径；建议改成 output_dir 下的绝对路径，避免读取错知识包。")
 
     graphify_out_ignored = _git_ignores(root_path, cfg.output_dir)
     if not graphify_out_ignored:
@@ -60,6 +69,9 @@ def validate_project(root: Path | str = ".", config: ProjectConfig | None = None
 
     return ProjectReport(
         root=root_path,
+        raw_path=raw_path,
+        output_path=output_path,
+        packs_path=packs_path,
         raw_exists=raw_path.exists(),
         core_knowledge_exists=core_path.exists(),
         core_knowledge_file_count=len(core_files),
@@ -73,6 +85,12 @@ def validate_project(root: Path | str = ".", config: ProjectConfig | None = None
 
 
 def _git_ignores(root: Path, path: str) -> bool:
+    path_obj = Path(path)
+    if path_obj.is_absolute():
+        try:
+            path = path_obj.resolve().relative_to(root.resolve()).as_posix()
+        except ValueError:
+            return True
     git_dir = root / ".git"
     gitignore = root / ".gitignore"
     if not git_dir.exists():
