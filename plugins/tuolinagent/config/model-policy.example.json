@@ -1,0 +1,7 @@
+{
+  "video_frame_extractor": "ffmpeg",
+  "video_input_mode": "ffmpeg_keyframes",
+  "default_vision_model": "gpt-5.5",
+  "escalation_vision_model": "gpt-5.5-pro",
+  "model_switch_surface": "config_only"
+}

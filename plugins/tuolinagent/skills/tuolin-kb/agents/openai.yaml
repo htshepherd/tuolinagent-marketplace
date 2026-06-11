@@ -1,0 +1,4 @@
+interface:
+  display_name: "Tuolin KB"
+  short_description: "Build and query Tuolin knowledge packs."
+  default_prompt: "Use $tuolin-kb to 整理或查询拓霖本地知识库。"

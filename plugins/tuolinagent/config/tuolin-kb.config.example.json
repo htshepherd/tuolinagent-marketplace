@@ -1,0 +1,6 @@
+{
+  "raw_dir": "raw",
+  "output_dir": "graphify-out",
+  "packs_dir": "graphify-out/tuolin-agent-packs",
+  "graphify_mode": "codex_adapter"
+}

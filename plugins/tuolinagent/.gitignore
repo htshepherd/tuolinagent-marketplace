@@ -1,0 +1,27 @@
+.DS_Store
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+env/
+
+# Real enterprise data and generated knowledge artifacts must stay local.
+raw/
+graphify-out/
+
+# Local config and secrets.
+config/tuolin-kb.config.json
+config/model-policy.json
+.env
+.env.*
+*.key
+*.pem
+
+# Temporary files.
+*.tmp
+*.temp
+*.swp
+*.part

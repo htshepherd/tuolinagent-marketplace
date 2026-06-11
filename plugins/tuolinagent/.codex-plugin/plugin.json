@@ -1,0 +1,18 @@
+{
+  "name": "tuolinagent",
+  "version": "0.1.0",
+  "description": "Tianjin Tuolin local knowledge base Codex plugin.",
+  "author": {
+    "name": "Tianjin Tuolin"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Tuolin Agent",
+    "shortDescription": "Build and query Tuolin's local knowledge packs.",
+    "longDescription": "Tuolin Agent compiles local raw company materials into Graphify outputs and product-level Agent knowledge packs for Codex workflows.",
+    "developerName": "Tianjin Tuolin",
+    "category": "Productivity",
+    "capabilities": [],
+    "defaultPrompt": "帮我整理或查询拓霖本地知识库。"
+  }
+}
