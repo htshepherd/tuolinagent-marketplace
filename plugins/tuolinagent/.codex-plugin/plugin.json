@@ -1,6 +1,6 @@
 {
   "name": "tuolinagent",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Tianjin Tuolin local knowledge base Codex plugin.",
   "author": {
     "name": "Tianjin Tuolin"
@@ -12,7 +12,16 @@
     "longDescription": "Tuolin Agent compiles local raw company materials into Graphify outputs and product-level Agent knowledge packs for Codex workflows.",
     "developerName": "Tianjin Tuolin",
     "category": "Productivity",
-    "capabilities": [],
-    "defaultPrompt": "帮我整理或查询拓霖本地知识库。"
+    "capabilities": [
+      "Interactive",
+      "Read",
+      "Write"
+    ],
+    "brandColor": "#2563EB",
+    "defaultPrompt": [
+      "整理一下拓霖知识库",
+      "更新拓霖知识库",
+      "用拓霖知识库回答产品问题"
+    ]
   }
 }
