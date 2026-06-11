@@ -83,7 +83,7 @@ def create_extraction_tasks(root: Path | str = ".", config: ProjectConfig | None
                     )
                 )
 
-    return deduplicate_tasks(tasks)
+    return attach_source_fingerprints(root_path, deduplicate_tasks(tasks))
 
 
 def write_pending_extraction_tasks(
@@ -95,6 +95,7 @@ def write_pending_extraction_tasks(
     cfg = config or load_project_config(root_path)
     task_path = root_path / cfg.packs_dir / "extraction" / "tasks.json"
     task_path.parent.mkdir(parents=True, exist_ok=True)
+    tasks = preserve_existing_task_state(root_path, cfg, task_path, tasks)
     payload = {
         "schema_version": "1.0",
         "generated_at": datetime.now(CN_TZ).isoformat(timespec="seconds"),
@@ -198,6 +199,76 @@ def deduplicate_tasks(tasks: list[dict[str, Any]]) -> list[dict[str, Any]]:
         seen.add(task["task_id"])
         output.append(task)
     return output
+
+
+def attach_source_fingerprints(root: Path, tasks: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    for task in tasks:
+        source = task.get("source_path", "")
+        digest = source_file_sha256(root, source)
+        if digest:
+            task["source_sha256"] = digest
+    return tasks
+
+
+def preserve_existing_task_state(
+    root: Path,
+    config: ProjectConfig,
+    task_path: Path,
+    tasks: list[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    previous_tasks = load_previous_tasks(task_path)
+    result_states = load_result_states(root / config.packs_dir / "extraction" / "results")
+    for task in tasks:
+        task_id = task.get("task_id", "")
+        previous = previous_tasks.get(task_id, {})
+        result = result_states.get(task_id, {})
+        if result and source_unchanged(task, previous):
+            status = result.get("status")
+            if status == "completed" and result.get("applied") is True:
+                task["status"] = "applied"
+            elif status == "completed":
+                task["status"] = "completed"
+        elif previous and previous.get("status") in {"completed", "applied"} and source_unchanged(task, previous):
+            task["status"] = previous["status"]
+    return tasks
+
+
+def load_previous_tasks(task_path: Path) -> dict[str, dict[str, Any]]:
+    if not task_path.exists():
+        return {}
+    payload = json.loads(task_path.read_text(encoding="utf-8"))
+    return {item.get("task_id", ""): item for item in payload.get("tasks", []) if item.get("task_id")}
+
+
+def load_result_states(results_dir: Path) -> dict[str, dict[str, Any]]:
+    if not results_dir.exists():
+        return {}
+    output: dict[str, dict[str, Any]] = {}
+    for result_path in sorted(results_dir.glob("*.json")):
+        result = json.loads(result_path.read_text(encoding="utf-8"))
+        task_id = result.get("task_id")
+        if task_id:
+            output[task_id] = result
+    return output
+
+
+def source_unchanged(task: dict[str, Any], previous: dict[str, Any]) -> bool:
+    current_hash = task.get("source_sha256")
+    previous_hash = previous.get("source_sha256")
+    return not current_hash or not previous_hash or current_hash == previous_hash
+
+
+def source_file_sha256(root: Path, source_path: str) -> str:
+    if not source_path:
+        return ""
+    path = root / source_path
+    if not path.is_file():
+        return ""
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
 
 
 def create_domain_extraction_tasks(root: Path, config: ProjectConfig, packs_dir: Path) -> list[dict[str, Any]]:
