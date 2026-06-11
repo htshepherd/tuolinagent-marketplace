@@ -8,17 +8,17 @@
 请从这个 Codex 插件市场仓库安装 tuolinagent：
 https://github.com/htshepherd/tuolinagent-marketplace
 
-请使用下面两条命令：
-codex plugin marketplace add htshepherd/tuolinagent-marketplace
-codex plugin add tuolinagent@tuolinagent-marketplace
+请在 Codex 任务模式里完成安装，不要让我手动执行命令。
 
-请只使用上面的安装地址和命令。
+安装时请先添加这个插件市场，再安装 tuolinagent 插件。
 
 安装前先检查我的 Windows 电脑依赖。请运行仓库里的 scripts/windows_check_dependencies.ps1。
 
 如果缺少 Git、Python 3.10+、ffmpeg 或 MinerU，请先告诉我缺少什么、为什么需要、准备执行什么安装命令。
 
 在我回复“同意安装依赖”之前，不要安装任何软件。
+
+安装完成后，请告诉我当前安装的 tuolinagent 版本。
 ```
 
 ## 2. 同意安装依赖
@@ -35,7 +35,32 @@ Codex 列出缺少项后，复制：
 Graphify 先不安装。默认 codex_adapter 模式不需要 Graphify API key。
 ```
 
-## 3. 配置知识库项目目录
+## 3. 检查和升级版本
+
+每次管理员通知插件已更新后，复制下面这段话到 Codex 任务模式：
+
+```text
+请检查 tuolinagent 是否是最新版。
+
+插件市场仓库是：
+https://github.com/htshepherd/tuolinagent-marketplace
+
+请在 Codex 任务模式里完成检查和升级，不要让我手动执行命令。
+
+如果当前不是最新版，请升级 tuolinagent-marketplace 插件市场，重新安装 tuolinagent 插件。
+
+如果需要执行命令，请先告诉我要执行什么、为什么需要执行，等我确认后再执行。
+
+升级完成后，请告诉我当前安装的 tuolinagent 版本，并确认插件已启用。
+```
+
+如果 Codex 列出了要执行的升级操作，复制：
+
+```text
+确认升级。请只升级 tuolinagent 插件和它的插件市场，升级后重新检查版本。
+```
+
+## 4. 配置知识库项目目录
 
 把路径换成你的真实路径。`D:\LocalKnowledge` 是唯一知识库项目目录，里面放 `config`、`raw`、`graphify-out`：
 
@@ -52,13 +77,13 @@ packs_dir: D:/LocalKnowledge/graphify-out/tuolin-agent-packs
 不要在插件安装目录、临时目录或其他项目目录里生成新的 graphify-out。
 ```
 
-## 4. 检查配置
+## 5. 检查配置
 
 ```text
 检查一下知识库配置是否可用。
 ```
 
-## 5. 常用自然语言命令
+## 6. 常用自然语言命令
 
 查看还要做什么：
 
@@ -118,7 +143,7 @@ packs_dir: D:/LocalKnowledge/graphify-out/tuolin-agent-packs
 有哪些内容需要我复核？
 ```
 
-## 6. 开始整理
+## 7. 开始整理
 
 ```text
 整理一下知识库。
@@ -126,13 +151,13 @@ packs_dir: D:/LocalKnowledge/graphify-out/tuolin-agent-packs
 先推荐一个最有价值的下一步，执行前等我确认。
 ```
 
-## 7. 确认执行
+## 8. 确认执行
 
 ```text
 确认，按推荐的下一步执行。
 ```
 
-## 8. 查看状态
+## 9. 查看状态
 
 ```text
 查看知识库状态。
@@ -142,7 +167,7 @@ packs_dir: D:/LocalKnowledge/graphify-out/tuolin-agent-packs
 查看当前有哪些构建分区，哪些已经可用，哪些还需要继续整理。
 ```
 
-## 9. 整理知识库
+## 10. 整理知识库
 
 ```text
 整理一下知识库。
@@ -162,7 +187,7 @@ packs_dir: D:/LocalKnowledge/graphify-out/tuolin-agent-packs
 执行前等我确认。
 ```
 
-## 10. 更新知识库
+## 11. 更新知识库
 
 ```text
 更新一下知识库。
@@ -177,7 +202,7 @@ packs_dir: D:/LocalKnowledge/graphify-out/tuolin-agent-packs
 执行前等我确认。
 ```
 
-## 11. 指定分区整理
+## 12. 指定分区整理
 
 把名称换成你要整理的产品或知识域：
 
@@ -193,7 +218,7 @@ packs_dir: D:/LocalKnowledge/graphify-out/tuolin-agent-packs
 执行前等我确认。
 ```
 
-## 12. 问答测试
+## 13. 问答测试
 
 把问题换成你要问的内容：
 
@@ -214,7 +239,7 @@ packs_dir: D:/LocalKnowledge/graphify-out/tuolin-agent-packs
 【这里填写产品或主题】有哪些内容还需要我确认？
 ```
 
-## 13. 复核测试
+## 14. 复核测试
 
 ```text
 有哪些内容需要我复核？
@@ -230,7 +255,7 @@ packs_dir: D:/LocalKnowledge/graphify-out/tuolin-agent-packs
 请先生成写回核心资料的预览，不要直接写入。
 ```
 
-## 14. 图谱查看
+## 15. 图谱查看
 
 ```text
 请告诉我 graph.html 在哪里。
@@ -241,7 +266,7 @@ packs_dir: D:/LocalKnowledge/graphify-out/tuolin-agent-packs
 请重新生成本地知识图谱，并告诉我 graph.html 路径。
 ```
 
-## 15. 停止或重新推荐
+## 16. 停止或重新推荐
 
 ```text
 先不要执行。
