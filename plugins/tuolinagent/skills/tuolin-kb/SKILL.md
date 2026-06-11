@@ -32,6 +32,24 @@ Natural-language routing:
 
 Build/update before execution must show a short partition-scoped plan and wait for user confirmation.
 
+Every user-facing recommendation that needs confirmation must include one copyable natural-language reply. Use wording like:
+
+```text
+你可以直接回复：确认，继续看标准资料。
+```
+
+or:
+
+```text
+你可以直接回复：确认，先把石英纤维隔热带整理成可用资料。
+```
+
+When there is nothing left to organize, switch to using existing materials and include one copyable question example:
+
+```text
+你可以直接问：石英纤维隔热带适合哪些客户场景？
+```
+
 ### Partition-Scoped Build Meaning
 
 “整理一下拓霖知识库”不是直接执行全库构建，也不是状态报表。它在本项目中只有一个含义：
@@ -77,6 +95,8 @@ Expected response when the user says “整理一下拓霖知识库”:
 
 这一步不会修改核心资料，也不会对外发布内容。
 
+你可以直接回复：确认，先把石英纤维隔热带整理成可用资料。
+
 请确认是否开始整理。
 ```
 
@@ -93,6 +113,8 @@ Expected response when the user says “整理石英纤维隔热带资料”:
 - 下一步建议做什么
 
 这一步不会修改核心资料，也不会对外发布内容。
+
+你可以直接回复：确认，开始整理石英纤维隔热带资料。
 
 请确认是否开始。
 ```

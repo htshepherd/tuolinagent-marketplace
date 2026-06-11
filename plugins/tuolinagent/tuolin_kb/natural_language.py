@@ -112,6 +112,8 @@ def format_organize_recommendation(recommendation: OrganizeRecommendation, repor
                 "",
                 "这一步不会修改核心资料，也不会对外发布内容。",
                 "",
+                f"你可以直接回复：确认，开始整理{recommendation.partition_name}资料。",
+                "",
                 "请确认是否开始整理。",
             ]
         )
@@ -130,6 +132,8 @@ def format_organize_recommendation(recommendation: OrganizeRecommendation, repor
             "",
             "这一步不会修改核心资料，也不会对外发布内容。",
             "",
+            f"你可以直接回复：确认，先把{recommendation.partition_name}整理成可用资料。",
+            "",
             "请确认是否开始整理。",
         ]
         return "\n".join(lines)
@@ -143,6 +147,8 @@ def format_organize_recommendation(recommendation: OrganizeRecommendation, repor
                 "",
                 "这一步不会修改核心资料，也不会对外发布内容。",
                 "",
+                f"你可以直接回复：确认，继续看{recommendation.partition_name}资料。",
+                "",
                 "请确认是否继续。",
             ]
         )
@@ -152,6 +158,8 @@ def format_organize_recommendation(recommendation: OrganizeRecommendation, repor
             [
                 recommendation.reason,
                 recommendation.result_summary,
+                "",
+                f"你可以直接回复：确认，先更新{recommendation.partition_name}分区。",
                 "",
                 "请确认是否先更新这个分区。",
             ]
@@ -163,6 +171,8 @@ def format_organize_recommendation(recommendation: OrganizeRecommendation, repor
                 recommendation.reason,
                 "",
                 recommendation.result_summary,
+                "",
+                f"你可以直接问：{recommendation.partition_name}适合哪些客户场景？",
                 "",
                 "如果你新增了图片、报告或视频，我再继续整理。",
             ]
